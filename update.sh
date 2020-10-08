@@ -6,15 +6,22 @@ umask 002
 # Load environment
 source /cvmfs/eic.opensciencegrid.org/packages/setup-env.sh
 
-# Update eic-spack repository
-git -C ${SPACK_ROOT} fetch --all
-git -C ${SPACK_ROOT} pull
-git -C ${SPACK_ROOT} status 
+# Update spack repository
+spack_pre=`git -C ${SPACK_ROOT} rev-parse HEAD`
+git -C ${SPACK_ROOT} fetch -q --all
+git -C ${SPACK_ROOT} pull -q
+git -C ${SPACK_ROOT} status -s
+spack_post=`git -C ${SPACK_ROOT} rev-parse HEAD`
 
 # Update eic-spack repository
-git -C ${SPACK_ROOT}/var/spack/repos/eic-spack fetch --all
-git -C ${SPACK_ROOT}/var/spack/repos/eic-spack pull
-git -C ${SPACK_ROOT}/var/spack/repos/eic-spack status
+eic_spack_pre=`git -C ${SPACK_ROOT}/var/spack/repos/eic-spack rev-parse HEAD`
+git -C ${SPACK_ROOT}/var/spack/repos/eic-spack fetch -q --all
+git -C ${SPACK_ROOT}/var/spack/repos/eic-spack pull -q
+git -C ${SPACK_ROOT}/var/spack/repos/eic-spack status -s
+eic_spack_post=`git -C ${SPACK_ROOT}/var/spack/repos/eic-spack rev-parse HEAD`
+
+# Exit if no changes
+[[ "${spack_pre}" == "${spack_post}" && "${eic_spack_pre}" == "${eic_spack_post}" ]] && exit
 
 # Create environments
 for envdir in ${SPACK_ROOT}/var/spack/repos/eic-spack/environments/* ; do
