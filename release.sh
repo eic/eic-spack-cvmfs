@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Group umask
+umask 002
+
 # Load spack
 source /cvmfs/eic.opensciencegrid.org/packages/setup-env.sh
 
