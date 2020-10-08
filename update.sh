@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Group umask
+umask 002
+
 # Load environment
 source /cvmfs/eic.opensciencegrid.org/packages/setup-env.sh
 
@@ -26,3 +29,7 @@ for envdir in ${SPACK_ROOT}/var/spack/repos/eic-spack/environments/* ; do
 	spack install
 	spack env deactivate
 done
+
+# Release the cvmfs working directory
+dir=`dirname ${0}`
+${dir}/release.sh
