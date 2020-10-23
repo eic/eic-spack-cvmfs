@@ -23,6 +23,9 @@ eic_spack_post=`git -C ${SPACK_ROOT}/var/spack/repos/eic-spack rev-parse HEAD`
 # Exit if no changes
 [[ "${spack_pre}" == "${spack_post}" && "${eic_spack_pre}" == "${eic_spack_post}" ]] && exit
 
+# Show local differences 
+git diff
+
 # Create environments
 for envdir in ${SPACK_ROOT}/var/spack/repos/eic-spack/environments/* ; do
 	env=`basename ${envdir}`
