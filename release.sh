@@ -1,5 +1,7 @@
 #!/bin/bash
 
+dir=`dirname ${0}`
+
 # Group umask
 umask 002
 
@@ -22,18 +24,8 @@ spack find -x -v -L
 echo "Disk usage (top 10 packages): [this may take a while]"
 du -sh /cvmfs/eic.opensciencegrid.org/packages/* | sort -h -r | head -n 10
 
-# Cvmfs catalog in every package top directory
-for package in /cvmfs/eic.opensciencegrid.org/packages/* ; do
-  if [ ${package} = ${package/spack/} ] ; then
-    find ${package} -mindepth 2 -maxdepth 2 -type d -exec touch {}/.cvmfscatalog \;
-  fi
-done
-# Verification
-find /cvmfs/eic.opensciencegrid.org/packages/ -maxdepth 4 -name ".cvmfscatalog" -type f
-
-# Cvmfs catalog at spack top level and builtin repo
-touch ${SPACK_ROOT}/.cvmfscatalog
-touch ${SPACK_ROOT}/var/spack/repos/builtin/.cvmfscatalog
+# Add cvmfscatalog
+${dir}/cvmfscatalog-add.sh /cvmfs/eic.opensciencegrid.org/packages
 
 # Release
 touch /cvmfs/eic.opensciencegrid.org/packages/CVMFSRELEASE

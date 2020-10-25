@@ -1,5 +1,7 @@
 #!/bin/bash
 
+dir=`dirname ${0}`
+
 # Group umask
 umask 002
 
@@ -23,8 +25,8 @@ eic_spack_post=`git -C ${SPACK_ROOT}/var/spack/repos/eic-spack rev-parse HEAD`
 # Exit if no changes
 [[ "${spack_pre}" == "${spack_post}" && "${eic_spack_pre}" == "${eic_spack_post}" ]] && exit
 
-# Show local differences 
-git diff
+# Remove cvmfscatalog
+${dir}/cvmfscatalog-remove.sh /cvmfs/eic.opensciencegrid.org/packages
 
 # Create environments
 for envdir in ${SPACK_ROOT}/var/spack/repos/eic-spack/environments/* ; do
@@ -40,6 +42,8 @@ for envdir in ${SPACK_ROOT}/var/spack/repos/eic-spack/environments/* ; do
 	spack env deactivate
 done
 
+# Add cvmfscatalog
+${dir}/cvmfscatalog-add.sh /cvmfs/eic.opensciencegrid.org/packages
+
 # Release the cvmfs working directory
-dir=`dirname ${0}`
 ${dir}/release.sh
