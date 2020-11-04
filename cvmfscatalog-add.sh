@@ -9,6 +9,11 @@ for package in ${cvmfs}/* ; do
   fi
 done
 
+# Cvmfs catalog in every view top directory
+for env in ${cvmfs}/spack/current/var/spack/environments/* ; do
+  touch ${env}/.spack-env/view/.cvmfscatalog
+done
+
 # Cvmfs catalog at spack top level and builtin repo
 touch ${SPACK_ROOT}/.cvmfscatalog
 touch ${SPACK_ROOT}/var/spack/repos/builtin/.cvmfscatalog
