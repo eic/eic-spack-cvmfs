@@ -38,7 +38,7 @@ for envdir in ${SPACK_ROOT}/var/spack/repos/eic-spack/environments/* ; do
 		spack env activate ${env}
 	fi
 	spack concretize -f
-	spack install
+	spack install -j $(($(nproc)/2))
 	spack env deactivate
 done
 
