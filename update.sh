@@ -23,7 +23,7 @@ git -C ${SPACK_ROOT}/var/spack/repos/eic-spack status -s
 eic_spack_post=`git -C ${SPACK_ROOT}/var/spack/repos/eic-spack rev-parse HEAD`
 
 # Exit if no changes
-[[ "${spack_pre}" == "${spack_post}" && "${eic_spack_pre}" == "${eic_spack_post}" ]] && exit
+[[ "${spack_pre}" == "${spack_post}" && "${eic_spack_pre}" == "${eic_spack_post}" && $# -eq 0 ]] && exit
 
 # Remove cvmfscatalog
 ${dir}/cvmfscatalog-remove.sh /cvmfs/eic.opensciencegrid.org/packages
