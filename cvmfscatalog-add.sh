@@ -5,7 +5,7 @@ cvmfs=${1:-/cvmfs/eic.opensciencegrid.org/packages}
 # Cvmfs catalog in every package top directory except spack
 for package in ${cvmfs}/* ; do
   if [ ${package} = ${package/spack/} ] ; then
-    find ${package} -mindepth 2 -maxdepth 2 -type d -print -exec touch {}/.cvmfscatalog \;
+    find ${package} -mindepth 2 -maxdepth 2 -type d -exec touch {}/.cvmfscatalog \;
   fi
 done
 
