@@ -18,7 +18,7 @@ eic_spack_post=`git -C ${SPACK_ROOT}/var/spack/repos/eic-spack rev-parse HEAD`
 [[ "${spack_pre}" == "${spack_post}" && "${eic_spack_pre}" == "${eic_spack_post}" && $# -eq 0 ]] && exit
 
 # Loop over operating systems
-for os in ubuntu20.04 ; do
+for os in centos8 ubuntu20.04 ; do
   singularity run docker://electronioncollider/spack-builder:${os} ${dir}/update.sh $*
 done
 
