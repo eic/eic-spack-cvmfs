@@ -2,6 +2,12 @@
 
 dir=`dirname ${0}`
 
+# Group umask
+umask 002
+
+# Load environment
+source /cvmfs/eic.opensciencegrid.org/packages/setup-env.sh
+
 # Update spack repository
 spack_pre=`git -C ${SPACK_ROOT} rev-parse HEAD`
 git -C ${SPACK_ROOT} pull origin -q
