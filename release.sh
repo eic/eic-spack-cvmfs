@@ -13,8 +13,8 @@ echo "Cleaning temporary files"
 spack clean -s -d -f
 
 # Garbage collect (disabled to reuse build dependencies)
-#echo "Removing unneeded specs"
-#spack gc
+echo "Removing unneeded specs"
+spack gc -y
 
 # Show explicitly installed packages
 echo "Explicitly installed packages:"
