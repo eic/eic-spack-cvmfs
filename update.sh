@@ -29,4 +29,4 @@ done
 ${dir}/cvmfscatalog-add.sh /cvmfs/eic.opensciencegrid.org/packages
 
 # Release the cvmfs working directory
-${dir}/release.sh
+${dir}/release.sh /cvmfs/eic.opensciencegrid.org/packages
