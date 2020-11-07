@@ -8,6 +8,10 @@ umask 002
 # Load environment
 source /cvmfs/eic.opensciencegrid.org/packages/setup-env.sh
 
+# Find compilers
+spack compiler find --scope site
+spack compiler list
+
 # Remove cvmfscatalog
 ${dir}/cvmfscatalog-remove.sh /cvmfs/eic.opensciencegrid.org/packages
 
