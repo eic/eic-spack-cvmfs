@@ -24,8 +24,10 @@ for envdir in ${SPACK_ROOT}/var/spack/repos/eic-spack/environments/* ; do
 		spack env create ${env} ${envfile}
 		spack env activate ${env}
 	fi
-	spack concretize -f
-	spack install -j $(($(nproc)/2))
+	if [ "${envdir}/spack.yaml" -nt "${envdir}/spack.lock" ] ; then
+		spack concretize -f
+	fi
+	spack install -j $(($(nproc)/2)) || spack install --keep-stage --show-log-on-error -j 1
 	spack env deactivate
 done
 
