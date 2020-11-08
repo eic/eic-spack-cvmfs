@@ -11,7 +11,9 @@ done
 
 # Cvmfs catalog in every view top directory
 for env in ${cvmfs}/spack/current/var/spack/environments/* ; do
-  touch ${env}/.spack-env/view/.cvmfscatalog
+  if [ -d ${env}/.spack-env/view ] ; then
+    touch ${env}/.spack-env/view/.cvmfscatalog
+  fi
 done
 
 # Cvmfs catalog at spack top level and builtin repo
