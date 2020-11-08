@@ -17,7 +17,9 @@ fi
 spack compiler list
 
 # Remove cvmfscatalog
-${dir}/cvmfscatalog-remove.sh /cvmfs/eic.opensciencegrid.org/packages
+if [ -w /cvmfs/eic.opensciencegrid.org/packages ] ; then
+  ${dir}/cvmfscatalog-remove.sh /cvmfs/eic.opensciencegrid.org/packages
+fi
 
 # Create environments
 for envdir in ${SPACK_ROOT}/var/spack/repos/eic-spack/environments/* ; do
@@ -36,7 +38,11 @@ for envdir in ${SPACK_ROOT}/var/spack/repos/eic-spack/environments/* ; do
 done
 
 # Add cvmfscatalog
-${dir}/cvmfscatalog-add.sh /cvmfs/eic.opensciencegrid.org/packages
+if [ -w /cvmfs/eic.opensciencegrid.org/packages ] ; then
+  ${dir}/cvmfscatalog-add.sh /cvmfs/eic.opensciencegrid.org/packages
+fi
 
 # Release the cvmfs working directory
-${dir}/release.sh /cvmfs/eic.opensciencegrid.org/packages
+if [ -w /cvmfs/eic.opensciencegrid.org/packages ] ; then
+  ${dir}/release.sh /cvmfs/eic.opensciencegrid.org/packages
+fi
