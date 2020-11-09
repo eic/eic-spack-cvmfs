@@ -22,15 +22,15 @@ if [ -w /cvmfs/eic.opensciencegrid.org/packages ] ; then
 fi
 
 # Create environments
-for envdir in ${SPACK_ROOT}/var/spack/repos/eic-spack/environments/* ; do
+environments=${1:-${SPACK_ROOT}/var/spack/repos/eic-spack/environments}
+for envdir in ${environments}/* ; do
 	env=`basename ${envdir}`
         envfile=${envdir}/spack.yaml
-	spack env activate ${env}
-	if [ -z "${SPACK_ENV}" ] ; then
-		spack env create ${env} ${envfile}
-		spack env activate ${env}
+	if [ ! -f "${envdir}/spack.lock" ] ; then
+		spack env create -d ${envdir} ${envfile}
 	fi
-	if [ "${envdir}/spack.yaml" -nt "${envdir}/spack.lock" ] ; then
+	spack env activate ${envdir}
+	if [ ! -f "${envdir}/spack.lock" -o "${envdir}/spack.yaml" -nt "${envdir}/spack.lock" ] ; then
 		spack concretize -f
 	fi
 	spack install -j $(($(nproc)/2)) || spack install --keep-stage --show-log-on-error -j 1
