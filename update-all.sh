@@ -9,19 +9,25 @@ umask 002
 source /cvmfs/eic.opensciencegrid.org/packages/setup-env.sh
 
 # Update spack repository
-spack_pre=`git -C ${SPACK_ROOT} rev-parse HEAD`
-git -C ${SPACK_ROOT} pull origin -q
-git -C ${SPACK_ROOT} status -s
-spack_post=`git -C ${SPACK_ROOT} rev-parse HEAD`
+if [ -w ${SPACK_ROOT} ] ; then
+  spack_pre=`git -C ${SPACK_ROOT} rev-parse HEAD`
+  git -C ${SPACK_ROOT} pull origin -q
+  git -C ${SPACK_ROOT} status -s
+  spack_post=`git -C ${SPACK_ROOT} rev-parse HEAD`
+  [[ "${spack_pre}" == "${spack_post}" ]] && spack_unchanged=1
+fi
 
 # Update eic-spack repository
-eic_spack_pre=`git -C ${SPACK_ROOT}/var/spack/repos/eic-spack rev-parse HEAD`
-git -C ${SPACK_ROOT}/var/spack/repos/eic-spack pull origin -q
-git -C ${SPACK_ROOT}/var/spack/repos/eic-spack status -s
-eic_spack_post=`git -C ${SPACK_ROOT}/var/spack/repos/eic-spack rev-parse HEAD`
+if [ -w ${SPACK_ROOT}/var/spack/repos/eic-spack ] ; then
+  eic_spack_pre=`git -C ${SPACK_ROOT}/var/spack/repos/eic-spack rev-parse HEAD`
+  git -C ${SPACK_ROOT}/var/spack/repos/eic-spack pull origin -q
+  git -C ${SPACK_ROOT}/var/spack/repos/eic-spack status -s
+  eic_spack_post=`git -C ${SPACK_ROOT}/var/spack/repos/eic-spack rev-parse HEAD`
+  [[ "${eic_spack_pre}" == "${eic_spack_post}" ]] && eic_spack_unchanged=1
+fi
 
 # Exit if no changes
-[[ "${spack_pre}" == "${spack_post}" && "${eic_spack_pre}" == "${eic_spack_post}" && $# -eq 0 ]] && exit
+[[ "${spack_unchanged}" -eq 1 && "${eic_spack_unchanged}" -eq 1 && $# -eq 0 ]] && exit
 
 # Loop over operating systems
 for os in centos7 centos8 ubuntu18.04 ubuntu20.04 ubuntu20.10 ; do
