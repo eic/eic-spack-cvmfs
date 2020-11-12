@@ -9,4 +9,4 @@ A typical crontab entry might be:
 35 */2 * * *    if [ -f ~/eic-spack-cvmfs/update-all.sh ] ; then ~/eic-spack-cvmfs/update-all.sh ; fi
 ```
 
-Please report any bugs at to the main EIC Spack repository.
+Please report any bugs at to the main [EIC Spack](http://github.com/eic/eic-spack) repository.
