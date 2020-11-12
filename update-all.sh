@@ -31,7 +31,7 @@ fi
 
 # Loop over operating systems
 for os in centos7 centos8 ubuntu18.04 ubuntu20.04 ubuntu20.10 ; do
-  singularity run -B /cvmfs:/cvmfs docker://electronioncollider/spack-builder:${os} ${dir}/update.sh 2>&1 | tee ~/spack-builder:${os}.log
+  singularity run -B /cvmfs:/cvmfs /cvmfs/eic.opensciencegrid.org/singularity/spack-builder:${os} ${dir}/update.sh 2>&1 | tee ~/spack-builder:${os}.log
 done
 
 echo "Singularity cache size:"
