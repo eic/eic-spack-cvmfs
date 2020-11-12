@@ -31,7 +31,12 @@ fi
 
 # Loop over operating systems
 for os in centos7 centos8 ubuntu18.04 ubuntu20.04 ubuntu20.10 ; do
-  singularity run -B /cvmfs:/cvmfs /cvmfs/eic.opensciencegrid.org/singularity/spack-builder:${os} ${dir}/update.sh 2>&1 | tee ~/spack-builder:${os}.log
+  if [ -w ${SPACK_ROOT}/../log ] ; then
+    log=$SPACK_ROOT/../log/spack-builder:${os}-$(date --iso-8601).log
+  else
+    log=/tmp/spack-builder:${os}-$(date --iso-8601).log
+  fi
+  singularity run -B /cvmfs:/cvmfs /cvmfs/eic.opensciencegrid.org/singularity/spack-builder:${os} ${dir}/update.sh 2>&1 | tee ${log}
 done
 
 echo "Singularity cache size:"
