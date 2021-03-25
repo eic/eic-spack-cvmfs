@@ -8,6 +8,10 @@ umask 002
 # Load environment
 source /cvmfs/eic.opensciencegrid.org/packages/setup-env.sh
 
+# Setup os
+spack debug report
+os=`spack arch -o`
+
 # Find compilers
 if [ -w /cvmfs/eic.opensciencegrid.org/packages ] ; then
   spack compiler find --scope site
