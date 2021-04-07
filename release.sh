@@ -22,10 +22,6 @@ spack clean -s -d -f
 echo "Explicitly installed packages:"
 spack find -x -v -L
 
-# Show disk usage
-echo "Disk usage (top 10 packages): [this may take a while]"
-du -sh ${cvmfs}/* | sort -h -r | head -n 10
-
 # Add cvmfscatalog
 ${dir}/cvmfscatalog-add.sh ${cvmfs}
 
