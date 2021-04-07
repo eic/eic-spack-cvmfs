@@ -1,6 +1,7 @@
 #!/bin/bash
 
 cvmfs=${1:-/cvmfs/eic.opensciencegrid.org/packages}
+views=${2:-/cvmfs/eic.opensciencegrid.org/views}
 
 # Cvmfs catalog in every package top directory except spack
 for package in ${cvmfs}/* ; do
@@ -10,9 +11,9 @@ for package in ${cvmfs}/* ; do
 done
 
 # Cvmfs catalog in every view top directory
-for env in ${cvmfs}/spack/current/var/spack/environments/* ; do
-  if [ -d ${env}/.spack-env/view ] ; then
-    touch ${env}/.spack-env/view/.cvmfscatalog
+for view in ${views}/*/* ; do
+  if [ -d ${view} ] ; then
+    touch ${view}/.cvmfscatalog
   fi
 done
 
