@@ -21,7 +21,7 @@ fi
 spack compiler list
 
 # Find ccache
-spack load --first ccache os=$os || spack install ccache $os && spack load --first ccache os=$os
+spack load --first ccache os=$os || spack install ccache os=$os && spack load --first ccache os=$os
 
 # Wait until released
 if [ -w /cvmfs/eic.opensciencegrid.org/packages ] ; then
