@@ -38,28 +38,33 @@ for envdir in ${environments}/* ; do
 		continue
 	fi
 
-	mkdir -p ${envdir}/${os}
-	if [ ! -f "${envdir}/${os}/spack.lock" ] ; then
-		spack env create --without-view -d ${envdir}/${os} ${envfile}
+	envosdir=${envdir}/${os}
+	if [ ! -w ${envosdir} ] ; then
+		envosdir=$PWD/${env}/${os}
 	fi
 
-	spack env activate --without-view ${envdir}/${os}
+	mkdir -p ${envosdir}
+	if [ ! -f "${envosdir}/spack.lock" ] ; then
+		spack env create --without-view -d ${envosdir} ${envfile}
+	fi
 
-	if [ ! -f "${envdir}/${os}/spack.lock" ] ; then
+	spack env activate --without-view ${envosdir}
+
+	if [ ! -f "${envosdir}/spack.lock" ] ; then
 		echo "Concretizing for the first time"
 		spack concretize -f
 	fi
 
 	yaml_time=$(ls --time-style=+%s -l ${envdir}/spack.yaml | awk '{print($6)}')
-	lock_time=$(ls --time-style=+%s -l ${envdir}/${os}/spack.lock | awk '{print($6)}')
+	lock_time=$(ls --time-style=+%s -l ${envosdir}/spack.lock | awk '{print($6)}')
         yaml_lock_diff=$((yaml_time-lock_time))
 	if [ "${yaml_lock_diff}" -gt 5 ] ; then
 		echo "Reconcretizing because of changes to environment"
-		cp ${envdir}/spack.yaml ${envdir}/${os}/spack.yaml
+		cp ${envdir}/spack.yaml ${envosdir}/spack.yaml
 		spack concretize -f
 	fi
 
-	updated_packages=`find ${packages} -type f -newer ${envdir}/${os}/spack.lock -not -name "*.pyc"`
+	updated_packages=`find ${packages} -type f -newer ${envosdir}/spack.lock -not -name "*.pyc"`
 	if [ ! -z "${updated_packages}" ] ; then
 		echo "Reconcretizing because of changes to packages:"
 		echo "${updated_packages}"
