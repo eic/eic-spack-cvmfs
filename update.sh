@@ -20,23 +20,52 @@ else
 fi
 spack compiler list
 
-# Remove cvmfscatalog
+# Find ccache
+spack load --first ccache os=$os || spack install ccache $os && spack load --first ccache os=$os
+
+# Wait until released
 if [ -w /cvmfs/eic.opensciencegrid.org/packages ] ; then
-  ${dir}/cvmfscatalog-remove.sh /cvmfs/eic.opensciencegrid.org/packages
+  ${dir}/wait-until-released.sh /cvmfs/eic.opensciencegrid.org/packages
 fi
 
 # Create environments
+packages=/cvmfs/eic.opensciencegrid.org/packages/spack/eic-spack/packages
 environments=/cvmfs/eic.opensciencegrid.org/packages/spack/eic-spack/environments
 for envdir in ${environments}/* ; do
 	env=`basename ${envdir}`
-        envfile=${envdir}/spack.yaml
-	if [ ! -f "${envdir}/spack.lock" ] ; then
-		spack env create -d ${envdir} ${envfile}
+	envfile=${envdir}/spack.yaml
+	if [ ! -d "${envdir}" ] ; then
+		continue
 	fi
-	spack env activate ${envdir}
-	if [ ! -f "${envdir}/spack.lock" -o "${envdir}/spack.yaml" -nt "${envdir}/spack.lock" -o $# -gt 0 ] ; then
+
+	mkdir -p ${envdir}/${os}
+	if [ ! -f "${envdir}/${os}/spack.lock" ] ; then
+		spack env create --without-view -d ${envdir}/${os} ${envfile}
+	fi
+
+	spack env activate --without-view ${envdir}/${os}
+
+	if [ ! -f "${envdir}/${os}/spack.lock" ] ; then
+		echo "Concretizing for the first time"
 		spack concretize -f
 	fi
+
+	yaml_time=$(ls --time-style=+%s -l ${envdir}/spack.yaml | awk '{print($6)}')
+	lock_time=$(ls --time-style=+%s -l ${envdir}/${os}/spack.lock | awk '{print($6)}')
+        yaml_lock_diff=$((yaml_time-lock_time))
+	if [ "${yaml_lock_diff}" -gt 5 ] ; then
+		echo "Reconcretizing because of changes to environment"
+		cp ${envdir}/spack.yaml ${envdir}/${os}/spack.yaml
+		spack concretize -f
+	fi
+
+	updated_packages=`find ${packages} -type f -newer ${envdir}/${os}/spack.lock -not -name "*.pyc"`
+	if [ ! -z "${updated_packages}" ] ; then
+		echo "Reconcretizing because of changes to packages:"
+		echo "${updated_packages}"
+		spack concretize -f
+	fi
+
 	spack install -j $(($(nproc)/2)) || spack install --keep-stage --show-log-on-error -j 1
 	spack env deactivate
 done
