@@ -39,7 +39,7 @@ for envdir in ${environments}/* ; do
 	fi
 
 	envosdir=${envdir}/${os}
-	if [ ! -w ${envosdir} ] ; then
+	if [ ! -w ${envdir} ] ; then
 		envosdir=$PWD/${env}/${os}
 	fi
 
