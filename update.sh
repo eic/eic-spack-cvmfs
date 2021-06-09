@@ -39,8 +39,8 @@ for envdir in ${environments}/* ; do
 	fi
 
 	envosdir=${envdir}/${os}
-	if [ ! -w ${envdir} ] ; then
-		envosdir=$PWD/${env}/${os}
+	if [ ! -w ${envosdir} ] ; then
+		continue
 	fi
 
 	mkdir -p ${envosdir}
