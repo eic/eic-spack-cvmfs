@@ -71,7 +71,8 @@ for envdir in ${environments}/* ; do
 		spack concretize -f
 	fi
 
-	spack install -j $(($(nproc)/2)) || spack install --keep-stage --show-log-on-error -j 1
+	spack install -j $(($(nproc)/2)) | grep -v '^\[+\]'
+	spack install -j 1 --keep-stage --show-log-on-error | grep -v '^\[+\]'
 	spack env deactivate
 done
 
